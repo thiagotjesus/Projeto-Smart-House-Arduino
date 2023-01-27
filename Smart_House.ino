@@ -63,13 +63,15 @@ void loop() {
   
   luzExterna();
 
-  garagem();
+  abrirGaragem();
+  
+  abrirJanela();
  
   soloSeco();
 
   incendio();
   
-  temperatura();
+  medirTemperatura();
   
   telasLCD();
   
@@ -103,7 +105,7 @@ void luzExterna(){
   }
 }
 
-void garagem(){
+void abrirGaragem(){
   // Inicio programação garagem
  garagem = digitalRead(A0);// Armazenando valor do interruptor de metal
  if (garagem == 0){
@@ -118,7 +120,7 @@ void garagem(){
  }
 }
 
-janela(){
+void abrirJanela(){
   // Inicio programação janela dia de chuva
  nivel_agua = analogRead(A2);// Armazenando valor do sensor de chuva
  if (nivel_agua > 100){ // Verificar se está chovendo
@@ -132,6 +134,7 @@ janela(){
   //Serial.println(nivel_agua);
 }
 void soloSeco(){
+  //Inicio da programação para verificar a umidade do solo
   nivel_solo = analogRead(A3);
   if (nivel_solo < 50){
     digitalWrite(13,HIGH);
@@ -154,20 +157,16 @@ void soloSeco(){
 }
 
 void incendio(){
-  // Inicio programação janela dia de chuva
- nivel_agua = analogRead(A2);// Armazenando valor do sensor de chuva
- if (nivel_agua > 100){ // Verificar se está chovendo
-  servo_10.write(0);
-  valor_tela = 3;
-  tela_ativa = true;
-  telasLCD();
- }else{ // não está chovendo
-  servo_10.write(45);
- }
-  //Serial.println(nivel_agua);
+  //Inicio da programação incêndio
+  fogo = digitalRead(8);
+  if (fogo == 1){
+    analogWrite(6, 255);
+  }else{
+    analogWrite(6, 0);
+  }
 }
 
-void temperatura(){
+void medirTemperatura(){
   //Inicio da programação sensor de temperatura e umidade
   temperatura = dht11.temperature;
   umidade = dht11.humidity;
